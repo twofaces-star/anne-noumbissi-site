@@ -884,4 +884,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p>Toute exploitation non autorisée constitue une contrefaçon sanctionnée par les articles L.335-2 et suivants du CPI.</p>
 
     <h3>4. Limitation de responsabilité</h3>
-    <p>Anne Noumbissi s'efforce d'assurer l'exactitude des informations diffusées sur ce site. Toutefois, elle ne peut garantir l'exactitude, la complétude ou l'actualité des informations. La responsabilité d'Anne N
+    <p>Anne Noumbissi s'efforce d'assurer l'exactitude des informations diffusées sur ce site. Toutefois, elle ne peut garantir l'exactitude, la complétude ou l'actualité des informations. La responsabilité d'Anne Noumbissi ne saurait être engagée en cas d'erreur ou d'omission.</p>
+
+    <h3>5. Droit applicable</h3>
+    <p>Ce site est soumis au droit français. Tout litige relatif à son 
+    utilisation relève de la compétence exclusive des tribunaux français.</p>
+
+    <button class="legal-close" onclick="closeLegal('mentions')">Fermer ✕</button>
+  </div>
+</div>
+
+<script>
+  // Cookie banner
+  if (!localStorage.getItem('cookie_consent')) {
+    setTimeout(() => document.getElementById('cookieBanner')
+      .classList.add('visible'), 800);
+  }
+  function acceptCookies() {
+    localStorage.setItem('cookie_consent','accepted');
+    document.getElementById('cookieBanner').classList.remove('visible');
+  }
+  function refuseCookies() {
+    localStorage.setItem('cookie_consent','refused');
+    document.getElementById('cookieBanner').classList.remove('visible');
+    window['ga-disable-GTM-T5TJHKND'] = true;
+  }
+  function openLegal(type) {
+    document.getElementById('modal-'+type).classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeLegal(type) {
+    document.getElementById('modal-'+type).classList.remove('open');
+    document.body.style.overflow='';
+  }
+  document.querySelectorAll('.legal-modal').forEach(m => {
+    m.addEventListener('click', function(e) {
+      if (e.target===this) { this.classList.remove('open');
+        document.body.style.overflow=''; }
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anne Noumbissi — Site en maintenance</title>
+<meta name="robots" content="noindex, nofollow"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;--dark:#111111;--dark2:#161616;--card:#1c1c1c;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --white:#f5f5f5;--muted:#888;--muted2:#b0b0b0;
+  --accent:#c8a96e;--accent2:#e8c99a;--text:#e8e8e8;
+  --serif:"Cormorant Garamond",Georgia,serif;
+  --sans:"Inter",system-ui,sans-serif
+}
+html{font-size:16px}
+body{font-family:var(--sans);background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.7}
+::selection{background:var(--accent);color:#000}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+
+/* LAYOUT */
+.page{position:relative;z-index:1;min-height:100vh;display:grid;grid-template-rows:70px 1fr auto;max-width:1100px;margin:0 auto;padding:0 4rem}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;text-decoration:none;opacity:.85;transition:opacity .2s;flex-shrink:0;cursor:pointer}
+.nav-logo:hover{opacity:1}
+.nav-status{display:flex;align-items:center;gap:7px;font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.nav-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:dotpulse 2s ease-in-out infinite}
+@keyframes dotpulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(200,169,110,.4)}50%{opacity:.5;box-shadow:0 0 0 6px rgba(200,169,110,0)}}
+
+/* MAIN */
+main{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 0 3rem;gap:0}
+
+.eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;gap:.75rem;animation:fadeUp .7s ease both}
+.eyebrow::before,.eyebrow::after{content:'';display:block;width:28px;height:1px;background:var(--accent)}
+
+h1{font-family:var(--serif);font-size:clamp(2.6rem,5.5vw,5rem);font-weight:300;line-height:1.05;color:var(--white);margin-bottom:.5rem;animation:fadeUp .7s .08s ease both}
+h1 em{display:block;font-style:italic;color:var(--accent2);font-size:.88em;margin-top:.1em}
+
+.subtitle{font-size:.92rem;color:var(--muted);max-width:460px;margin:.5rem auto 2.5rem;line-height:1.85;font-weight:300;animation:fadeUp .7s .16s ease both}
+.subtitle strong{color:var(--muted2);font-weight:400}
+
+.sep{width:1px;height:36px;background:linear-gradient(to bottom,transparent,var(--border2),transparent);margin:0 auto 2.5rem;animation:fadeUp .7s .24s ease both}
+
+/* ── JOKE ENGINE ── */
+.joke-wrap{width:100%;max-width:600px;animation:fadeUp .7s .3s ease both}
+
+/* category tabs */
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:1.25rem}
+.cat-btn{background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:var(--sans);font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .9rem;border-radius:2px;cursor:pointer;transition:all .2s}
+.cat-btn:hover{border-color:var(--accent2);color:var(--accent2)}
+.cat-btn.active{background:rgba(200,169,110,.1);border-color:var(--accent);color:var(--accent)}
+
+/* joke card */
+.joke-card{
+  background:var(--dark);border:1px solid var(--border2);
+  border-top:2px solid var(--accent);
+  padding:1.75rem 2.25rem 1.5rem;border-radius:2px;
+  margin-bottom:1.25rem;min-height:110px;
+  display:flex;flex-direction:column;justify-content:center;
+  transition:opacity .25s,transform .25s;
+  position:relative;overflow:hidden
+}
+.joke-card::before{content:'"';font-family:var(--serif);font-size:5rem;color:var(--accent);opacity:.06;position:absolute;top:-.5rem;left:.75rem;line-height:1;pointer-events:none}
+.joke-card.fade-out{opacity:0;transform:translateY(5px)}
+.joke-meta{display:flex;align-items:center;gap:.6rem;margin-bottom:.65rem}
+.jtag{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:block}
+.jcat{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:.15rem .55rem;border-radius:2px}
+.jtext{font-family:var(--serif);font-size:1.12rem;font-style:italic;color:var(--accent2);line-height:1.65;display:block}
+.jpunch{font-family:var(--sans);font-size:.82rem;color:var(--muted2);margin-top:.5rem;line-height:1.6;display:block}
+
+/* reaction bar */
+.reaction-bar{display:flex;align-items:center;justify-content:space-between;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.reactions{display:flex;gap:6px}
+.react-btn{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.75rem;padding:.3rem .8rem;border-radius:100px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:4px;font-family:var(--sans)}
+.react-btn:hover{border-color:var(--accent2);color:var(--white);transform:scale(1.08)}
+.react-btn.voted{background:rgba(200,169,110,.1);border-color:var(--accent);color:var(--accent)}
+.react-count{font-size:.68rem;min-width:10px}
+.jnum{font-size:.65rem;letter-spacing:.1em;color:var(--muted);font-style:italic}
+
+/* nav buttons */
+.joke-nav{display:flex;gap:8px;margin-bottom:.75rem}
+.btn-nav{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:var(--sans);font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:.75rem 1rem;cursor:pointer;border-radius:2px;transition:all .25s}
+.btn-nav:hover{border-color:var(--accent);color:var(--accent);background:rgba(200,169,110,.04);transform:translateY(-1px)}
+.btn-nav:active{transform:scale(.98)}
+.btn-nav.primary{border-color:rgba(200,169,110,.35);color:var(--accent2)}
+.btn-nav.primary:hover{background:rgba(200,169,110,.08);border-color:var(--accent)}
+.btn-nav .icon{transition:transform .25s}
+.btn-nav:hover .icon{transform:rotate(-12deg) scale(1.15)}
+
+/* progress board */
+.divider{width:100%;max-width:600px;border:none;border-top:1px solid var(--border);margin:2.5rem auto;animation:fadeUp .7s .5s ease both}
+
+.board{width:100%;max-width:600px;border:1px solid var(--border);background:var(--dark2);padding:1.5rem 2rem;border-radius:2px;animation:fadeUp .7s .55s ease both}
+.board-title{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem;text-align:left}
+.prog-row{display:flex;align-items:center;gap:1rem;margin-bottom:.9rem}
+.prog-row:last-child{margin-bottom:0}
+.prog-name{font-size:.78rem;color:var(--muted2);width:185px;flex-shrink:0;text-align:left}
+.prog-track{flex:1;height:2px;background:var(--border2);border-radius:1px;overflow:hidden}
+.prog-fill{height:100%;border-radius:1px;animation:fillIn 2s ease forwards}
+@keyframes fillIn{from{width:0!important}to{}}
+.prog-pct{font-family:var(--serif);font-size:.88rem;color:var(--accent);width:34px;text-align:right;flex-shrink:0}
+
+/* contact */
+.contact-strip{width:100%;max-width:600px;margin-top:1.75rem;display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.8rem;color:var(--muted);animation:fadeUp .7s .65s ease both}
+.contact-strip a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+.contact-strip a:hover{border-color:var(--accent)}
+
+/* fun score */
+.fun-score{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(--muted);margin-top:1.25rem;font-style:italic;animation:fadeUp .7s .7s ease both}
+.fun-score b{font-family:var(--serif);font-size:1rem;color:var(--accent);font-weight:300}
+
+/* egg hint */
+.egg-hint{margin-top:.75rem;font-size:.68rem;color:#1c1c1c;letter-spacing:.1em;cursor:default;transition:color .5s;animation:fadeUp .7s .75s ease both}
+.egg-hint:hover{color:#555}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:1.5rem 0;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;color:var(--muted);letter-spacing:.06em}
+
+/* EGG */
+#egg{position:fixed;inset:0;z-index:100;background:rgba(10,10,10,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;opacity:0;pointer-events:none;transition:opacity .4s}
+#egg.on{opacity:1;pointer-events:all}
+#egg .e-eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:.75rem}
+#egg .e-eyebrow::before,#egg .e-eyebrow::after{content:'';display:block;width:24px;height:1px;background:var(--accent)}
+#egg h2{font-family:var(--serif);font-size:clamp(2rem,5vw,3.8rem);font-weight:300;color:var(--white);text-align:center;line-height:1.1}
+#egg h2 em{font-style:italic;color:var(--accent2)}
+#egg .egg-joke{font-family:var(--serif);font-size:1.2rem;font-style:italic;color:var(--accent2);max-width:440px;text-align:center;line-height:1.65}
+#egg p{font-size:.85rem;color:var(--muted);text-align:center;max-width:360px;line-height:1.8}
+#egg button{background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:var(--sans);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;padding:.65rem 1.75rem;cursor:pointer;border-radius:2px;transition:border-color .2s,color .2s}
+#egg button:hover{border-color:var(--accent);color:var(--accent)}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark2);border:1px solid var(--border2);border-left:2px solid var(--accent);color:var(--muted2);font-size:.8rem;padding:.65rem 1.25rem;border-radius:2px;z-index:90;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* RIPPLE */
+.rip{position:fixed;border-radius:50%;pointer-events:none;z-index:50;border:1px solid rgba(200,169,110,.3);animation:ripout .8s ease-out forwards}
+@keyframes ripout{from{width:0;height:0;opacity:.5;margin:0}to{width:100px;height:100px;margin:-50px;opacity:0}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+@media(max-width:768px){
+  .page{padding:0 1.5rem}
+  .prog-name{width:120px;font-size:.75rem}
+  footer{flex-direction:column;gap:.75rem;text-align:center}
+  .joke-nav{flex-direction:column}
+  .cat-tabs{gap:4px}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <nav>
+    <a class="nav-logo" aria-label="Anne Noumbissi">
+      <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:40px;width:auto">
+        <circle cx="26" cy="26" r="23" stroke="#c8a96e" stroke-width="0.9"/>
+        <circle cx="26" cy="26" r="19" stroke="#c8a96e" stroke-width="0.3" opacity="0.4"/>
+        <line x1="15" y1="40" x2="37" y2="12" stroke="#c8a96e" stroke-width="0.7" opacity="0.8"/>
+        <text x="10" y="30" font-family="Cormorant Garamond,Georgia,serif" font-size="17" font-weight="300" fill="#c8a96e">A</text>
+        <text x="24" y="39" font-family="Cormorant Garamond,Georgia,serif" font-size="17" font-weight="300" fill="#c8a96e">N</text>
+      </svg>
+    </a>
+    <div class="nav-status">Maintenance en cours</div>
+  </nav>
+
+  <main>
+
+    <div class="eyebrow">Retour très bientôt</div>
+    <h1>On peaufine<br><em>les derniers détails.</em></h1>
+    <p class="subtitle">Site temporairement hors ligne. <strong>En attendant, on a préparé de quoi sourire.</strong></p>
+
+    <div class="sep"></div>
+
+    <!-- JOKE ENGINE -->
+    <div class="joke-wrap">
+
+      <!-- category filter -->
+      <div class="cat-tabs">
+        <button class="cat-btn active" data-cat="all">Tout</button>
+        <button class="cat-btn" data-cat="vie">🙃 Vie quotidienne</button>
+        <button class="cat-btn" data-cat="famille">👨‍👩‍👧 Famille</button>
+        <button class="cat-btn" data-cat="boulot">💼 Boulot</button>
+        <button class="cat-btn" data-cat="tech">📱 Technologie</button>
+        <button class="cat-btn" data-cat="animaux">🐾 Animaux</button>
+        <button class="cat-btn" data-cat="client">Clients</button>
+        <button class="cat-btn" data-cat="dev">Dev / IT</button>
+        <button class="cat-btn" data-cat="seo">SEO / Digital</button>
+        <button class="cat-btn" data-cat="cyber">Cybersec</button>
+        <button class="cat-btn" data-cat="freelance">Freelance</button>
+      </div>
+
+      <div class="joke-card" id="jokeCard">
+        <div class="joke-meta">
+          <span class="jtag" id="jokeTag"></span>
+          <span class="jcat" id="jokeCat"></span>
+        </div>
+        <span class="jtext" id="jokeText"></span>
+        <span class="jpunch" id="jokePunch"></span>
+        <div class="reaction-bar">
+          <div class="reactions">
+            <button class="react-btn" id="r-lol">😂 <span class="react-count" id="c-lol">0</span></button>
+            <button class="react-btn" id="r-true">💯 <span class="react-count" id="c-true">0</span></button>
+            <button class="react-btn" id="r-ouch">😬 <span class="react-count" id="c-ouch">0</span></button>
+          </div>
+          <span class="jnum" id="jokeNum"></span>
+        </div>
+      </div>
+
+      <div class="joke-nav">
+        <button class="btn-nav" id="btnPrev"><span class="icon" style="transform:scaleX(-1);display:inline-block">✦</span> Précédente</button>
+        <button class="btn-nav primary" id="btnNext"><span class="icon">✦</span> <span id="jokeBtnLabel">Blague suivante</span></button>
+        <button class="btn-nav" id="btnRandom" title="Surprise !">🎲 Aléatoire</button>
+      </div>
+
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- PROGRESS -->
+    <div class="board">
+      <div class="board-title">— État d'avancement —</div>
+      <div class="prog-row">
+        <span class="prog-name">Café préparé ☕</span>
+        <div class="prog-track"><div class="prog-fill" style="width:100%;background:var(--accent)"></div></div>
+        <span class="prog-pct">100%</span>
+      </div>
+      <div class="prog-row">
+        <span class="prog-name">Design retouché</span>
+        <div class="prog-track"><div class="prog-fill" style="width:94%;background:var(--accent)"></div></div>
+        <span class="prog-pct">94%</span>
+      </div>
+      <div class="prog-row">
+        <span class="prog-name">Code intégré</span>
+        <div class="prog-track"><div class="prog-fill" style="width:87%;background:var(--accent2)"></div></div>
+        <span class="prog-pct">87%</span>
+      </div>
+      <div class="prog-row">
+        <span class="prog-name">Tests navigateurs</span>
+        <div class="prog-track"><div class="prog-fill" style="width:71%;background:var(--accent2)"></div></div>
+        <span class="prog-pct">71%</span>
+      </div>
+      <div class="prog-row">
+        <span class="prog-name">Mise en ligne</span>
+        <div class="prog-track"><div class="prog-fill" id="deployFill" style="width:42%;background:#555"></div></div>
+        <span class="prog-pct" id="deployPct">42%</span>
+      </div>
+    </div>
+
+    <div class="contact-strip">
+      Projet urgent ?&nbsp;<a href="mailto:hello@annenoumbissi.com">hello@annenoumbissi.com</a>&nbsp;·&nbsp;<a href="https://linkedin.com/in/annenoumbissi" target="_blank">LinkedIn</a>
+    </div>
+
+    <div class="fun-score">Score de bonne humeur : <b id="moodScore">0</b> pts</div>
+    <div class="egg-hint">Psst — cliquez 7× sur le logo ✦</div>
+
+  </main>
+
+  <footer>
+    <span>© 2026 Anne Noumbissi · Digital · IT · Occitanie</span>
+    <span>Site en maintenance · Retour bientôt</span>
+  </footer>
+
+</div>
+
+<!-- EASTER EGG -->
+<div id="egg">
+  <div class="e-eyebrow">Secret débloqué</div>
+  <h2>Vous avez<br><em>de la curiosité.</em></h2>
+  <p class="egg-joke" id="eggJoke"></p>
+  <p>C'est exactement la qualité que je cherche chez un client. On va bien s'entendre.</p>
+  <button id="btnCloseEgg">Fermer ✕</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const ALL_JOKES = [
+  { cat:'vie', tag:'Loi de Parkinson',         text:`Le travail s'étend pour occuper tout le temps disponible.`, punch:`C'est pour ça que les to-do lists ne se vident jamais.` },
+  { cat:'vie', tag:'Réveil utile',             text:`— À quelle heure tu te lèves ?<br>— À l'heure où je ne peux plus ignorer le bruit de mon alarme.`, punch:`La 4ème. Parfois la 7ème.` },
+  { cat:'vie', tag:'Régime lundi',             text:`"Je commence le régime lundi."`, punch:`Dit-on depuis le premier lundi de janvier 2019.` },
+  { cat:'vie', tag:'Netflix décision',         text:`"On regarde juste un épisode."`, punch:`Il est 2h du matin. La série est finie. Saison 3 lancée.` },
+  { cat:'vie', tag:'Courses stratégiques',     text:`Aller faire les courses avec une liste : efficace.<br>Y aller avec faim : catastrophique.`, punch:`Résultat : 3 paquets de chips, du Nutella, aucun légume.` },
+  { cat:'vie', tag:'Météo fiable',             text:`"Il paraît qu'il va faire beau ce week-end."`, punch:`Sortie annulée. Déluge. Comme prévu par quelqu'un d'autre.` },
+  { cat:'vie', tag:'Motivation sportive',      text:`Janvier : abonnement salle de sport signé. Enthousiasme maximal.`, punch:`Février : la salle ne se souvient plus de votre prénom.` },
+  { cat:'vie', tag:'Cuisine improvisation',    text:`"J'ai rien dans le frigo."`, punch:`Il y a 23 ingrédients dépareillés. Un cuisinier créatif y verrait un festin.` },
+  { cat:'vie', tag:'Temps libre',              text:`"Ce week-end je ne fais rien."`, punch:`Samedi 14h : liste de 12 tâches urgentes rédigée.` },
+  { cat:'vie', tag:'Commande en ligne',        text:`"Je vais juste regarder."`, punch:`Panier à 87€. Livraison estimée : dans 3 semaines.` },
+  { cat:'famille', tag:'Question universelle', text:`"T'as mangé ?"`, punch:`La question posée par tout parent à tout enfant depuis la nuit des temps. Même à 23h.` },
+  { cat:'famille', tag:'Héritage culturel',    text:`Les parents : "Baisse le son !"<br>20 ans plus tard :`, punch:`"Baisse le son !" — dit la même personne à ses propres enfants.` },
+  { cat:'famille', tag:'Aide informatique',    text:`"Viens m'aider avec mon téléphone."`, punch:`Durée estimée : 2 minutes. Durée réelle : toute l'après-midi du dimanche.` },
+  { cat:'famille', tag:'Repas de famille',     text:`"On va rester juste une heure."`, punch:`4 heures plus tard. Troisième dessert. Discussion politique évitée de justesse.` },
+  { cat:'famille', tag:'Cadeau parfait',       text:`"Offre-moi ce que tu veux, je ne suis pas difficile."`, punch:`Premier cadeau : mauvais. Deuxième : mieux. Troisième : enfin.` },
+  { cat:'famille', tag:'Chambre rangée',       text:`"Range ta chambre !"`, punch:`— C'est rangé. — C'est où, rangé ? — Sous le lit.` },
+  { cat:'famille', tag:'Retour tardif',        text:`"T'étais où ?"`, punch:`Réponse universelle depuis l'adolescence : "chez un ami." Fin de l'enquête.` },
+  { cat:'famille', tag:'Recette secrète',      text:`"Comment tu fais ton gratin ?"`, punch:`"Un peu de ci, un peu de ça." La recette ne sera jamais reproduite à l'identique.` },
+  { cat:'boulot', tag:'Réunion essentielle',   text:`"Cette réunion aurait pu être un email."`, punch:`Cet email aurait pu être un message vocal. Ce message aurait pu ne pas exister.` },
+  { cat:'boulot', tag:'Pause café sacrée',     text:`La pause café : officiellement 10 minutes.`, punch:`Officieusement : le seul moment où tout le monde se parle vraiment.` },
+  { cat:'boulot', tag:'Chef inspiré',          text:`"J'ai eu une idée cette nuit."`, punch:`Toujours un lundi matin. Jamais une idée courte.` },
+  { cat:'boulot', tag:'Open space',            text:`Open space : pour travailler en équipe dans le bruit des autres.`, punch:`Casque anti-bruit : l'accessoire indispensable du travail collaboratif.` },
+  { cat:'boulot', tag:'Mail urgent',           text:`Objet du mail : "URGENT !!!"<br>Envoyé à : toute l'équipe.`, punch:`Concerne : une question qui attendait depuis 3 semaines.` },
+  { cat:'boulot', tag:'Planning optimiste',    text:`"On a le temps, on verra ça en septembre."`, punch:`Il est le 28 août. Panique générale depuis ce matin.` },
+  { cat:'boulot', tag:'Télétravail mythe',     text:`"En télétravail on est plus productif."`, punch:`Les 3 premières semaines. Ensuite la machine à café est trop proche.` },
+  { cat:'boulot', tag:'Évaluation annuelle',   text:`"Quels sont vos axes d'amélioration ?"`, punch:`Comment dire "une augmentation" sans dire "une augmentation".` },
+  { cat:'tech', tag:'Batterie chronique',      text:`"Mon téléphone est encore à plat."`, punch:`Câble de recharge : 1 dans chaque pièce, 0 disponible quand on en a besoin.` },
+  { cat:'tech', tag:'Mot de passe oublié',     text:`Mot de passe oublié → réinitialisation → nouveau mot de passe → oublié 3 jours plus tard.`, punch:`Cercle de la vie numérique depuis 2004.` },
+  { cat:'tech', tag:'Mise à jour inopportune', text:`"Windows doit redémarrer pour installer les mises à jour."`, punch:`En pleine présentation client. Toujours.` },
+  { cat:'tech', tag:'GPS confiant',            text:`"Dans 200 mètres, tournez à gauche."`, punch:`À gauche : un champ. Le GPS recalcule. La confiance ne revient jamais totalement.` },
+  { cat:'tech', tag:'Signal fantôme',          text:`"Il n'y a pas de wifi ici ?"`, punch:`Au milieu d'une grande ville. En 2026. Inacceptable.` },
+  { cat:'tech', tag:'Stockage plein',          text:`"Espace de stockage insuffisant."`, punch:`7 754 photos de vacances 2019. Le téléphone a ses limites. Vous aussi.` },
+  { cat:'tech', tag:'Imprimante mystère',      text:`L'imprimante : l'appareil qui fonctionne parfaitement jusqu'au moment crucial.`, punch:`Encre vide. Bourrage papier. Connexion perdue. Les trois en même temps.` },
+  { cat:'tech', tag:'Réseaux sociaux',         text:`"Je ne regarde que 5 minutes."`, punch:`45 minutes plus tard, vous regardez des vidéos de chats en Corée du Sud.` },
+  { cat:'animaux', tag:'Chat 3h du matin',     text:`Le chat à 3h du matin : sprint dans le couloir, renversement d'un verre, retour au calme plat.`, punch:`Raison : inconnue. Enquête : classée sans suite.` },
+  { cat:'animaux', tag:'Chien fidèle',         text:`"Il est parti 3 minutes faire les poubelles."`, punch:`Le chien à son retour : accueil digne d'un héros de guerre revenant après 10 ans.` },
+  { cat:'animaux', tag:'Chat sélectif',        text:`Le chat ignore royalement le jouet à 25€.`, punch:`Il joue pendant 40 minutes avec le sachet plastique dans lequel il était emballé.` },
+  { cat:'animaux', tag:'Promenade zen',        text:`"Il ne tire pas en laisse."`, punch:`En théorie. Quand il voit un autre chien, un écureuil, une feuille, une ombre.` },
+  { cat:'animaux', tag:'Vétérinaire timing',   text:`Le chat malade depuis 3 jours :`, punch:`Parfaitement en forme à l'instant précis où le vétérinaire l'examine.` },
+  { cat:'animaux', tag:'Territoire sacré',     text:`Le canapé : à tout le monde selon les humains.`, punch:`Au chat selon le chat. Il y a une différence.` },
+  { cat:'animaux', tag:'Alimentation fine',    text:`"Il mange de tout !"`, punch:`Sauf les légumes dans les croquettes. Triés et laissés proprement sur le bord du bol.` },
+  { cat:'client', tag:'Brief classique',       text:`"Je veux quelque chose de simple, moderne, pro, original, pas trop chargé, mais complet, avec du relief."`, punch:`(+ 47 références Pinterest contradictoires)` },
+  { cat:'client', tag:'Délai de paiement',     text:`"La facture ? Je vous la règle dès que le site est parfait."`, punch:`Le site est livré depuis 3 mois. Il attend toujours.` },
+  { cat:'client', tag:'Petit changement',      text:`"C'est juste un petit changement, ça prend combien de temps ?"`, punch:`5 jours, 3 réunions et un redesign complet plus tard…` },
+  { cat:'client', tag:'Comparaison douteuse',  text:`"Mon neveu fait ça pour 50€."`, punch:`Super nouvelle. Voilà le numéro de votre neveu. Bonne chance.` },
+  { cat:'client', tag:'Revue de contenu',      text:`"Je validerai les textes dès que j'ai le temps."`, punch:`Mise en ligne prévue : dans 4 mois. Toujours. Indéfiniment.` },
+  { cat:'client', tag:'Inspiration nocturne',  text:`"J'ai eu une idée à 23h47. Est-ce qu'on peut tout refaire ?"`, punch:`Oui. Pour un avenant signé avant 9h du matin.` },
+  { cat:'client', tag:'Périmètre élastique',   text:`"Ce n'est pas dans le devis mais ça ne devrait pas prendre longtemps ?"`, punch:`C'est toujours dans le devis. Ça prend toujours du temps.` },
+  { cat:'client', tag:'Feedback précis',       text:`"Je sais pas trop… c'est pas ce que j'avais en tête."`, punch:`En tête de qui ? Il n'y avait pas de brief.` },
+  { cat:'client', tag:'Urgence stratégique',   text:`"C'est urgent, il me le faut pour demain matin."`, punch:`Devis envoyé il y a 3 semaines. Réponse reçue : hier soir à 22h.` },
+  { cat:'dev', tag:'Loi de Murphy',            text:`"Ça marchait parfaitement en local."`, punch:`Chaque développeur, à chaque mise en prod, depuis 1991.` },
+  { cat:'dev', tag:'Support niveau 1',         text:`— Mon ordi ne marche plus.<br>— Vous avez essayé d'éteindre et rallumer ?<br>— Évidemment non.`, punch:`80% des interventions IT. Toutes les semaines.` },
+  { cat:'dev', tag:'Git blame',                text:`"git commit -m fix"<br>"git commit -m fix fix"<br>"git commit -m REVERT TOUT"`, punch:`L'honnêteté d'un historique de commits à 17h un vendredi.` },
+  { cat:'dev', tag:'Stack Overflow',           text:`Senior dev = quelqu'un qui sait exactement quoi chercher sur Stack Overflow.`, punch:`Et comment reformuler quand la première réponse est de 2009.` },
+  { cat:'dev', tag:'Documentation',            text:`"Le code est sa propre documentation."`, punch:`Dit le dev qui va relire son propre code dans 3 semaines sans rien comprendre.` },
+  { cat:'dev', tag:'Estimation',               text:`Client : "Combien de temps pour ça ?"<br>Dev : "2 jours."`, punch:`Semaine 3. Le bug de la date en timezone UTC+2 a tout fait capoter.` },
+  { cat:'dev', tag:'IE11',                     text:`"Tout est cassé sur Internet Explorer."`, punch:`C'est normal. Internet Explorer est mort. Enterrez-le.` },
+  { cat:'dev', tag:'Déploiement vendredi',     text:`Règle n°1 : ne jamais déployer en production le vendredi après 16h.`, punch:`Règle n°2 : voir règle n°1. Règle n°3 : personne ne respecte n°1.` },
+  { cat:'seo', tag:'SEO express',              text:`"On a mis le site en ligne lundi. Pourquoi on n'est pas premier sur Google vendredi ?"`, punch:`Google indexe en semaines. Rome ne s'est pas construite en 4 jours.` },
+  { cat:'seo', tag:'Stratégie Instagram',      text:`"On n'a pas besoin de stratégie, on va juste poster sur Instagram."`, punch:`Instagram a changé l'algorithme. Encore. Cette nuit. Comme tous les lundis.` },
+  { cat:'seo', tag:'KPIs absurdes',            text:`"On a 50 000 visiteurs par mois !"`, punch:`"Et combien ont acheté ?" — "…Deux."` },
+  { cat:'seo', tag:'Contenu miracle',          text:`"Publiez plus souvent et vous remonterez dans Google."`, punch:`Publier 5 articles vides vaut 0 article de fond. Google n'est pas dupe.` },
+  { cat:'seo', tag:'Viral overnight',          text:`"On veut que ça devienne viral."`, punch:`Le dernier contenu viral a mis 14 mois à percer. Et personne ne l'a prévu.` },
+  { cat:'seo', tag:'Analytics incompris',      text:`"Notre taux de rebond est à 85%, c'est bon signe ?"`, punch:`Ça dépend si vous vendez des billets de concert ou des logiciels B2B.` },
+  { cat:'cyber', tag:'Mot de passe national',  text:`Mot de passe de 63% des PME françaises :`, punch:`"123456" ou le nom du chien. Les deux, parfois.` },
+  { cat:'cyber', tag:'Antivirus total',        text:`"On est protégé, on a McAfee."`, punch:`McAfee n'a pas empêché 94% des attaques documentées de 2023.` },
+  { cat:'cyber', tag:'Email suspect',          text:`"J'ai cliqué sur le lien parce que ça avait l'air officiel."`, punch:`Le prince nigérian aussi avait l'air officiel.` },
+  { cat:'cyber', tag:'Backup stratégique',     text:`"On fait des sauvegardes. Enfin… on pense qu'elles tournent."`, punch:`La sauvegarde que vous n'avez pas testée n'existe pas.` },
+  { cat:'cyber', tag:'RGPD minimal',           text:`"On a mis une bannière cookie, on est conformes RGPD."`, punch:`La CNIL a une autre définition de conformes.` },
+  { cat:'cyber', tag:'VPN magique',            text:`"On a un VPN, on est anonymes."`, punch:`Un VPN masque votre IP. Pas vos mauvaises habitudes numériques.` },
+  { cat:'freelance', tag:'Tarif horaire',      text:`"500€ la journée ? Mais vous ne travaillez que 8h !"`, punch:`Les 10 ans d'expérience, les outils, la formation continue — offerts.` },
+  { cat:'freelance', tag:'Pause déjeuner',     text:`La pause déjeuner du freelance :`, punch:`Manger devant son écran en lisant des emails. Comme les autres jours.` },
+  { cat:'freelance', tag:'Vacances',           text:`"Vous êtes freelance, vous pouvez travailler en vacances !"`, punch:`Oui. Mais non. Enfin… souvent oui. C'est compliqué.` },
+  { cat:'freelance', tag:'Réunion de brief',   text:`"On se fait une petite réunion de 30 min pour aligner."`, punch:`1h45 plus tard, le brief n'est toujours pas clair. Un compte-rendu suit.` },
+  { cat:'freelance', tag:'Multitasking',       text:`Freelance = designer + dev + commercial + comptable + psy du client.`, punch:`Le tout pour le prix d'un seul. Tarif à négocier. (Non.)` },
+  { cat:'freelance', tag:'Vendredi 17h',       text:`"Vous pouvez me faire un devis pour lundi matin ?"`, punch:`Message reçu le vendredi à 17h03. Bonne soirée.` },
+];
+
+var activeJokes = ALL_JOKES.slice();
+var jokeIdx = -1;
+var moodScore = 0;
+var currentReactions = { lol:0, true:0, ouch:0 };
+var voted = null;
+var logoClicks = 0;
+var logoTimer = null;
+var eggJokes = [
+  "\"Mon site est cassé.\" — \"Vous avez des sauvegardes ?\" — \"Des quoi ?\"",
+  "\"Ce bouton doit être plus bleu. Mais genre, moins bleu qu'avant.\"",
+  "\"Faites-le en rouge. Non vert. Non, revenez au rouge mais différent.\"",
+  "\"Le site est parfait. On change tout dans 2 semaines.\""
+];
+
+function filterCat(btn, cat) {
+  document.querySelectorAll('.cat-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  activeJokes = cat === 'all' ? ALL_JOKES.slice() : ALL_JOKES.filter(function(j){ return j.cat === cat; });
+  jokeIdx = -1;
+  nextJoke();
+  showToast(activeJokes.length + ' blagues dans cette catégorie');
+}
+
+function showJoke(idx) {
+  var card = document.getElementById('jokeCard');
+  card.classList.add('fade-out');
+  setTimeout(function() {
+    var j = activeJokes[idx];
+    document.getElementById('jokeTag').textContent   = j.tag;
+    document.getElementById('jokeCat').textContent   = j.cat;
+    document.getElementById('jokeText').innerHTML    = j.text;
+    document.getElementById('jokePunch').textContent = j.punch;
+    document.getElementById('jokeNum').textContent   = (idx + 1) + ' / ' + activeJokes.length;
+    document.getElementById('jokeBtnLabel').textContent = idx >= activeJokes.length - 1 ? 'Recommencer \u21ba' : 'Suivante \u2192';
+    currentReactions = { lol: Math.floor(Math.random()*12), true: Math.floor(Math.random()*8), ouch: Math.floor(Math.random()*5) };
+    voted = null;
+    ['lol','true','ouch'].forEach(function(r) {
+      document.getElementById('c-'+r).textContent = currentReactions[r];
+      document.getElementById('r-'+r).classList.remove('voted');
+    });
+    card.classList.remove('fade-out');
+  }, 240);
+}
+
+function nextJoke() { jokeIdx = (jokeIdx + 1) % activeJokes.length; showJoke(jokeIdx); }
+function prevJoke() { jokeIdx = (jokeIdx - 1 + activeJokes.length) % activeJokes.length; showJoke(jokeIdx); }
+function randomJoke() {
+  var r;
+  do { r = Math.floor(Math.random() * activeJokes.length); } while(r === jokeIdx && activeJokes.length > 1);
+  jokeIdx = r; showJoke(jokeIdx); showToast('🎲 Blague surprise !');
+}
+
+function react(type) {
+  if (voted === type) {
+    currentReactions[type]--;
+    document.getElementById('c-'+type).textContent = currentReactions[type];
+    document.getElementById('r-'+type).classList.remove('voted');
+    voted = null; return;
+  }
+  if (voted) {
+    currentReactions[voted]--;
+    document.getElementById('c-'+voted).textContent = currentReactions[voted];
+    document.getElementById('r-'+voted).classList.remove('voted');
+  }
+  voted = type;
+  currentReactions[type]++;
+  document.getElementById('c-'+type).textContent = currentReactions[type];
+  document.getElementById('r-'+type).classList.add('voted');
+  moodScore += type === 'lol' ? 10 : type === 'true' ? 5 : 2;
+  document.getElementById('moodScore').textContent = moodScore;
+  showToast({lol:'😂 +10 pts bonne humeur !', true:'💯 +5 pts lucidité !', ouch:'😬 +2 pts courage !'}[type]);
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+function closeEgg() {
+  document.getElementById('egg').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+// Deploy counter
+var deployVal = 42;
+setInterval(function() {
+  if (deployVal >= 98) return;
+  if (Math.random() < .22) {
+    deployVal++;
+    document.getElementById('deployFill').style.width = deployVal + '%';
+    document.getElementById('deployPct').textContent = deployVal + '%';
+  }
+}, 3500);
+
+// Ripple
+document.addEventListener('click', function(e) {
+  var r = document.createElement('div');
+  r.className = 'rip'; r.style.left = e.clientX+'px'; r.style.top = e.clientY+'px';
+  document.body.appendChild(r);
+  setTimeout(function(){ r.remove(); }, 800);
+});
+
+// Wire up buttons
+document.querySelectorAll('.cat-btn').forEach(function(btn) {
+  btn.addEventListener('click', function(){ filterCat(btn, btn.dataset.cat); });
+});
+document.getElementById('btnPrev').addEventListener('click', prevJoke);
+document.getElementById('btnNext').addEventListener('click', nextJoke);
+document.getElementById('btnRandom').addEventListener('click', randomJoke);
+['lol','true','ouch'].forEach(function(type) {
+  document.getElementById('r-'+type).addEventListener('click', function(){ react(type); });
+});
+document.getElementById('btnCloseEgg').addEventListener('click', closeEgg);
+document.getElementById('egg').addEventListener('click', function(e){ if(e.target===this) closeEgg(); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeEgg(); });
+document.querySelector('.nav-logo').addEventListener('click', function(e) {
+  e.preventDefault(); logoClicks++;
+  clearTimeout(logoTimer);
+  logoTimer = setTimeout(function(){ logoClicks=0; }, 3000);
+  if (logoClicks >= 7) {
+    logoClicks = 0;
+    document.getElementById('eggJoke').textContent = eggJokes[Math.floor(Math.random()*eggJokes.length)];
+    document.getElementById('egg').classList.add('on');
+    document.body.style.overflow = 'hidden';
+  }
+});
+
+// Init — script is at end of body so DOM is ready
+nextJoke();
+</script>
+</body>
+</html>
